@@ -1,0 +1,15 @@
+{% if messages %}
+	{% for msg in messages %}
+		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay=4000>
+	  		<div class="toast-header">
+	    			<strong class="mr-auto">{{ msg.tags|upper }}</strong>
+			</div>
+	  		<div class="toast-body">
+	    			{{ msg }}
+	  		</div>
+		</div>
+		<script>
+			$('.toast').toast('show');
+		</script>
+	{% endfor %}
+{% endif %}

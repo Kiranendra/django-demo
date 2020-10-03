@@ -1,0 +1,63 @@
+{% extends 'home/bases/header.html' %}
+
+{% block content %}
+        <div class="album py-5 bg-light">
+    	    <div class="container">
+	        <div class="row">
+		  {% if products|length > 0 %}
+ 	            {% for pd in products %}
+        	      <div class="col-md-4">
+          	          <div class="card mb-4 shadow-sm">
+			      {% if not pd.product_thumbnail %}
+				  <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+				      <title>{{ pd.product_title }}</title>
+				      <rect width="100%" height="100%" fill="#55595c"/>
+				      <text x="50%" y="50%" fill="#eceeef" dy=".3em">Picture not available!</text>
+  			          </svg>
+			      {% else %}
+				  <center>
+				      <img src="{{ pd.product_thumbnail.url }}" alt="{{ pd.product_title }} Picture" width="50%"/>
+				  </center>
+			      {% endif %}
+		    	      <div class="card-body">
+				  <p class="card-text">
+				    <strong>{{ pd.product_title }}</strong>
+				  </p>
+              		          <p class="card-text">{{ pd.product_content }}</p>
+              		          <p class="card-text">(INR) <strong>Rs.{{ pd.product_price }}</strong></p>
+				      <div class="d-flex justify-content-between align-items-center">
+					  <div class="btn-group">
+					      {% if pd.product_url %}
+						  <button type="button" class="btn btn-sm btn-outline-secondary" onclick="urlFun('{{ pd.product_url }}')">View</button>
+					      {% else %}
+						  <button type="button" class="btn btn-sm btn-outline-secondary" onclick="urlFun('empty')">View</button>
+					      {% endif %}
+					  </div>
+					  <small class="text-muted">{{ pd.product_added }}</small>
+				      </div>
+			      </div>
+			  </div>
+		      </div>
+                    {% endfor %}
+		  {% else %}
+		    <h2>Sorry! No products to show</h2>
+		  {% endif %}
+		</div>
+	    </div>
+	</div>
+	<script>
+		function urlFun(url) {
+			if (!("empty".localeCompare(url))) {
+				alert("Sorry! no URL is found!");
+			}
+			else {
+				var element = document.createElement('a');
+			        element.style.display = 'none';
+			        element.setAttribute('href', url);
+			        element.setAttribute('target', '_blank');
+			        document.body.appendChild(element);
+				element.click();
+			}
+		}
+	</script>
+{% endblock %}
