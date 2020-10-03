@@ -1,8 +1,10 @@
 # Django Demo
 
-##### This document is under development
+### Never make a Django Repository public. The secret key will be made public which is serious security risk.
 
-#### Never make a Django Repository public. The secret key will be made public which is serious security risk.
+###### I have learnt the `DJANGO` by watching the sentdex youtube [tutorial](https://www.youtube.com/playlist?list=PLQVvvaa0QuDe9nqlirjacLkBYdgc2inh3) and from the original django [documentation](https://docs.djangoproject.com/en/3.1/).
+
+##### A BIG THANKS to ``sentdex`` for providing such awesome content and Django team for giving an beginner friendly documentation.
 
 ### STEPS:
 (In windows powershell is recommended)
@@ -30,41 +32,52 @@
 
 6. A directory is created with the name `Demo_Website`. Navigate to that directory. Inside that directory initially we will have a python file named `manage.py` and a directory with the same name.
 
-    6-a. The python file `manage.py` is the main file that is used for running the django applicaton.
+    6-a. The python file `manage.py` is the main file that is used for running the django applicaton. It is used for interacting with the django project (The whole project).
 
     6-b. The directory's primary use is to connect the other applications that you are going to create for the web application. We can develop applications (example a blog, a chatroom) and connect all of them to the main web application by modifying the files and contents here. This is like the main directory that points to all different web applications inside a website. It consists of 5 files:
 
-         __init__.py ==> 
+         __init__.py ==> To determine the project as a python package.
 
-         asgi.py ==> 
+         asgi.py ==> For ASGI-compatible web servers to serve the django project.
 
-         settings.py ==> 
+         settings.py ==> Configurations for the django project.
 
-         urls.py ==> contains url patterns to specify what view should be displayed based on the given url.
+         urls.py ==> Contains urls patterns to specify what view should be displayed based on the given url.
 
-         wsgi.py ==> 
+         wsgi.py ==> For WSGI-compatible web servers to serve the django project.
 
-7. Create an application (like a blog or main page for the website)
+7. Create an application (like a blog or main page for the website). An application in django is like a piece of logic. For example, for an e-commerce website we create it as:
 
-    	Syntax: python manage.py startapp <application_name>
-
-			py manage.py startapp home
+		django-admin startproject the_site
+		
+	*Any e-commerce site has basically 3 important logics(functionalities) ==> cart page, products page, profile page.
+	*Each page has its own logic. We can create three applications now to divide the logic instead of having all of them in a single application. Example:
+	
+		Syntax: python manage.py startapp <application_name>
+	
+			python manage.py startapp products_page
+			python manage.py startapp cart_page
+			python manage.py startapp profile_page
+			
+	*Now let's create the application for `Demo_Website`
+		
+		py manage.py startapp home
 
 8. A new directory is created again with the name `home`. It contains one directory and 6 files. These are for configuring the application `home`.
 
-		__init__.py ==> 
+		__init__.py ==> To determine the project as a python package.
 
-		admin.py ==> This file is used to register the models that were created for the application.
+		admin.py ==> This is used to register the models that were created for the application. Also we can modify the admin view for the current application.
 
-		apps.py ==> 
+		apps.py ==> To register the created pages in the current application. 
 
 		models.py ==> Every application is based on the models in the Django. It is like creating and mapping to a database table.
 
-		tests.py ==> 
+		tests.py ==> To create our own tests for the project and applications.
 
-		views.py ==> 
+		views.py ==> To create our own views that are to be shown to the user.
 
-		/migrations ==> All the created models for the application must be migrated and these migrations are stored in this directory
+		/migrations ==> All the created models for the application must be migrated and these migrations are stored in this directory.
 
 9. Run the server to check if the web application is working fine or not.
 
@@ -88,12 +101,14 @@
 		]
 		# when you visit home page the urls written in the 
 		# "home" directory file will be executed
+		
+	*Adding all url paths of the `home` application in the current `urls.py` file.
 
 13. Open the `urls.py` file located in the `home` directory and edit like this:
 
 		from django.urls import path
 		# from current directory importing view
-		# Relative import
+		# This type of importing (using dot(.)) is called Relative import
 		from . import views
 
 		# useful when creating custom URLS (in future)
@@ -102,6 +117,8 @@
 		urlpatterns = [
 			path("", views.homepage, name="homepage"),
 		]
+		
+	*Adding url paths of the `home` application views in the current `urls.py` file.
 
 14. Open `views.py` from `home` directory to create `homepage` function. The file looks like this:
 
@@ -113,6 +130,8 @@
 		# passing a request to the view
 		def homepage(request):
 			return HttpResponse("Hello World!")
+			
+	*Django gives response in `HttpResponse` object.
 
 15. Refresh the homepage and check the results. If it is okay continue. Otherwise go to step 11 and do it again.
 
@@ -144,7 +163,7 @@
 			'home.apps.HomeConfig',
 		]
 
-    17-a: The last line that is added will be found when we navigate to the `home` directory and open `apps.py`. We can find the `HomeConfig` function there. It looks like this:
+    17-a: The last line that is added will be found when we navigate to the `home` directory and open `apps.py`. We have to add the `HomeConfig` function there. It looks like this:
 
 		from django.apps import AppConfig
 
@@ -175,7 +194,7 @@
 
 		python manage.py shell
 
-	19-a. To add data into the table:
+	19-a. To add data into the table using shell:
 
 	    # import the Model
 	    from home.models import Product
@@ -205,7 +224,7 @@
 23. But the models or the database is not shown there because we haven't registered it. So to register the models open the `admin.py` file located inside the `home` directory. Register the newly created model. It should look like this:
 
 		from django.contrib import admin
-		# Relative import the model here
+		# Relative importing the model here
 		from .models import Product
 
 		# Register your models here.
@@ -213,7 +232,7 @@
 
     *Refresh the admin page now. You should see the model.
 
-24. Do not mind the name in the webpage which is plural (Products) but you have registed singular (Product). There is an in-built function that does this. We can override it if we want later.
+24. Do not mind the name in the webpage which is plural (Products) as you have registed singular (Product). There is an in-built function that does this. We can override it if we want later. But it is not mandatory.
 
 25. We can add or update or delete the products in the database using this in-built template. We can modify this template by adding a custom class during the registration of the models. We can also change the order of displaying the database items. After modifying the "admin.py" it looks like this:
 
@@ -223,8 +242,8 @@
 		# Register your models here.
 
 		class ProductDisplay(admin.ModelAdmin):
-		# the order of displaying the items can be changed here
-		# can also change what items to show and not to show
+		# The order of displaying the items can be changed here
+		# We can also change what items to show and not to show
 			fields = [
 				"product_title",
 				"product_content",
@@ -232,6 +251,8 @@
 			]
 
 		admin.site.register(Product, ProductDisplay)
+		
+	*Without registering the models the admin cannot add new data into the database.
 
 26. We can also set fieldsets (like showing items in sections - title and data one set, content another set) by using fieldsets variable instead of fields variable. Replace fields variable with following variable:
 
@@ -239,6 +260,8 @@
 			("Title/Date", {"fields": ["product_title", "product_added"]}),
 			("Content", {"fields": ["product_content"]})
 			]
+			
+	*This feature gives the admin to view the fields in set of groups
 
 27. We can have default values for the fields like getting the current time for adding a product by default instead of giving it manually in the template. This can be done by adding a paramenter called `default` to the `DateTimeField` in the `product_added` in the models of the home page. Remember step-18. On modifying the model we have to start the migration again. Sometimes it might not be necessary. But doing migrations is always a good practice to avoid unapplied migrations erros. The table will be altered only on migrating. On modifying the model it looks like this:
 
@@ -255,7 +278,7 @@
 			def __str__(self):
 				return self.product_title
 
-    *Now, do the migration process.
+    *The `CharField()` takes the (ascii) characters as the input with a maximum length of 200 (this can be changed). The `TextField()` takes any length of characters. The `DateTImeField()` accepts only date as the input. Now, do the migration process.
 
 28. In the `home` directory create a directory named `templates` to store the html templates. Inside that directory create another directory called `home` to store the html pages that are to be rendered for the home page. Navigate to the directory and create a html page named "home.html" and add the following line.
 
@@ -275,11 +298,7 @@
 
 		# passing a request to the view
 		def homepage(request):
-			return render(
-				request=request,
-				template_name="home/home.html",
-				context={"products": Product.objects.all}
-			)
+			return render(request=request, template_name="home/home.html", context={"products": Product.objects.all})
 
 		'''
 		   1. The "request" parameter is necessary to catch the request objects that are passed to the html page. This will be used later. But, keep it for now.
@@ -289,7 +308,7 @@
 		   3. The "context" parameter is used to pass data to the rendered template. Here we are passing all the items in the products table.
 		'''
 
-30. Now for editing the `home.html` template to display the products on the home page we use Django Template Language (DTL) which is alternative to the Jinja2 Template which is used in Flask. It looks like this:
+30. Now for editing the `home.html` template to display the products on the home page we use Django Template Language (DTL) which is alternative to the Jinja2 Template (which is used in Flask). It looks like this:
 
 		{% for pd in products %}
 			<p>{{ pd.product_title }}</p>
@@ -327,7 +346,7 @@
 			{% endfor %}
 		</body>
 	
-    *The static folder must be loaded before using it. After modifying the html file restart the server (stop and start).
+    *The static folder must be loaded before using it. After modifying the html file restart the server (stop and start). If it is not loaded then the server throws an error saying that the static directory is not loaded.
 
 34. The css or javascript files and some headings (like title) or navigation bar are common for most of the html pages in an application. So rather than copy and pasting the `importing` lines for every html file we can write those lines in a separate html file and import that one file in every html file in that application with one or few lines of code.
 
@@ -417,10 +436,9 @@
 		# register function
 		def register(request):
 			form = UserCreationForm
-			return render(request,
-							template_name="home/register.html",
-							context={"form": form}
-				   )
+			return render(request, template_name="home/register.html", context={"form": form} )
+			
+	*The `UserCreationForm()` is an in-built template that the django provides. With this form the registeration of new users is very simple and is also modifiable.
 
 40. Now add the following list item in `urlpatterns` in the `urls.py` inside `home` directory.
 
@@ -456,15 +474,12 @@
 						print(form.error_messages[msg])
 
 			form = UserCreationForm
-			return render(request,
-							  template_name="home/register.html",
-							  context={"form": form}
-						 )
+			return render(request, template_name="home/register.html", context={"form": form})
 
-    *Same usernames must not be given. Passwords can be duplicated. To check your entered passwords if you are stuck:
+    *Same usernames must not be given. Passwords can be duplicated. To check your entered passwords if you are stuck use the following statements while getting the input from the form in the `POST` method:
 	
 		print(request.POST['password1'])
-        print(request.POST['password2'])
+        	print(request.POST['password2'])
 
     *Passwords can be printed to the server console and also username. Also check users in admin page so that you find a way to register.
 
@@ -486,7 +501,7 @@
 			{% endfor %}
 		{% endif %}
 
-    *jhgkjdj
+    *The `script` tag must be written inside the `for` loop because for every message (if there are multiple) the script must be executed to show the message.
 
 45. Update the `views.py` as follows:
 	
@@ -508,12 +523,9 @@
 						messages.error(request, f"{msg}: {form.error_messages[msg]")
 
 			form = UserCreationForm
-			return render(request,
-							template_name="home/register.html",
-							context={"form": form}
-					 )
+			return render(request, template_name="home/register.html", context={"form": form})
 
-    *dlg dfh hfgh
+    *The `messages` module provides in-built methods to generate success or error messages.
 
 46. Add user authentication logic in the navigation bar. Update the navigation bar as below:
 
@@ -589,6 +601,7 @@
 							{"form": form}
 						   )
 
+    *The `AuthenticationForm()` is an in-built login template that is provided by the Django. It is also customizable.
     *Now the `login.html`:
 
 		{% extends 'home/bases/header.html' %}
@@ -666,9 +679,7 @@
 		</div>
 		{% endblock %}
 
-    *The kjhjs hdug	
-
-51. The products can only be added by the admin. Now, let's update the product model (table) so that the admin can have add thumbnail, title, content, price and a link. Before updating, delete the products and refresh the homepage. Also, install `Pillow` module to work with Images (Required). The updated `models.py` in the home directory looks like this:
+51. The products can only be added by the admin. Now, let's update the product model (table) so that the admin can add thumbnail, title, content, price and a link. Before updating, delete the products and refresh the homepage. Also, install `Pillow` module to work with Images (Required). The updated `models.py` in the home directory looks like this:
 
 		# updated product view
 		class Product(models.Model):
@@ -688,7 +699,7 @@
 						 })
 			]
 	
-    *Repeat step-18. Go to admin page and add the products. THejfl dgjbsdgj
+    *Repeat step-18. Go to admin page and add the products.
 
 52. Update the `settings.py` to work with images like this:
 
@@ -699,7 +710,7 @@
 		MEDIA_URL = '/media/'
 		MEDIA_ROOT = os.path.join(BASE_DIR, 'home/media')
 
-		*Update the "urls.py" from the "home" directory as below:
+	*Update the "urls.py" from the "home" directory as below:
 
 		#new import statements
 		from django.conf import settings
@@ -708,7 +719,7 @@
 		# Add this to the urlpatterns
 		+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-		*Replace the homepage <svg> tag with the following tags:
+	*Replace the homepage <svg> tag with the following code:
 
 		{% if not pd.product_thumbnail %}
 			<svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
@@ -721,8 +732,6 @@
 				<img src="{{ pd.product_thumbnail.url }}" alt="{{ pd.product_title }} Picture" width="50%"/>
 			</center>
 		{% endif %}
-
-    *Thelr ;lkjjg jdg
 
 53. Update the `home.html` to work with the urls as below:
 
@@ -752,4 +761,4 @@
 			}
 		</script>
 
-    *Tel ksheg khjddf db d df 
+###### This document is done for now. However, I will add more apps like for user profile, for user cart and will link them together to pass the data in between the apps. I might take a while to do it. But I will do it.
